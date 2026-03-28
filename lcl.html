@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <title>Manutenção de Equipamentos</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 10px;
+      color: #333;
+    }
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 15px 20px 25px;
+      border: 1px solid #000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .field {
+      flex: 1;
+      min-width: 160px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="month"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 4px 6px;
+      border: 1px solid #999;
+      border-radius: 2px;
+      font-size: 13px;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 50px;
+    }
+    input[readonly] {
+      background: #eee;
+    }
+    fieldset {
+      border: 1px solid #000;
+      margin-bottom: 10px;
+      padding: 8px 10px 10px;
+    }
+    legend {
+      padding: 0 6px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .checkbox-line {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+    }
+    .checkbox-line input[type="checkbox"] {
+      margin: 0;
+    }
+    .buttons {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .buttons button {
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #006600;
+    }
+    #erro {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #cc0000;
+    }
+
+    .med-grid {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      table-layout: fixed;
+    }
+    .med-grid th,
+    .med-grid td {
+      border: 1px solid #999;
+      padding: 6px;
+      font-size: 12px;
+      vertical-align: middle;
+      text-align: center;
+      width: 25%;
+    }
+    
+    .section-subtitle {
+      font-size: 12px;
+      font-weight: bold;
+      margin: 8px 0 4px;
+    }
+
+    #tokenOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #tokenModal {
+      background: #fff;
+      padding: 16px 20px 14px;
+      border-radius: 4px;
+      max-width: 320px;
+      width: 90%;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      font-size: 13px;
+    }
+    #tokenModal h2 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      text-align: center;
+    }
+    #tokenModal p {
+      margin: 0 0 8px 0;
+      font-size: 12px;
+      color: #444;
+      text-align: center;
+    }
+    #tokenModal input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px 6px;
+      border: 1px solid #999;
+      border-radius: 3px;
+      font-size: 13px;
+      margin-bottom: 6px;
+      text-align: center;
+      letter-spacing: 0.08em;
+    }
+    #tokenModal .token-error {
+      min-height: 14px;
+      font-size: 11px;
+      color: #cc0000;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    #tokenModal .token-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    #tokenModal .token-buttons button {
+      flex: 1;
+      padding: 5px 0;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    #historicoOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9998;
+    }
+    #historicoModal {
+      background: #fff;
+      padding: 16px 20px 14px;
+      border-radius: 4px;
+      max-width: 360px;
+      width: 90%;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    #historicoModal h2 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      text-align: center;
+    }
+    #historicoModal p {
+      margin: 0 0 8px 0;
+      font-size: 12px;
+      color: #444;
+      text-align: center;
+    }
+    #historicoLista {
+      margin: 8px 0 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hist-btn {
+      width: 100%;
+      padding: 4px 6px;
+      border: 1px solid #999;
+      background: #f7f7f7;
+      border-radius: 3px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .hist-btn:hover {
+      background: #e9e9e9;
+    }
+    .historico-buttons {
+      text-align: right;
+    }
+    .historico-buttons button {
+      padding: 5px 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 800px) {
+      .page {
+        max-width: 100%;
+        padding: 10px;
+      }
+      .row {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .field {
+        min-width: 100%;
+      }
+      .buttons button {
+        width: 100%;
+        padding: 10px;
+        font-size: 15px;
+      }
+      .med-grid {
+        display: block;
+        overflow-x: auto;
+      }
+      h1 {
+        font-size: 18px;
+      }
+    }
+
+    @media (min-width: 801px) {
+      .row { flex-direction: row; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Manutenção de Equipamentos</h1>
+
+    <fieldset>
+      <legend>Identificação / Consulta</legend>
+      <div class="row">
+        <div class="field">
+          <label for="id_eq">ID do Equipamento</label>
+          <input type="text" id="id_eq" readonly onblur="checarIdEqDuplicado()">
+        </div>
+        <div class="field">
+          <label for="dta_atdm">Data do Atendimento (registro)</label>
+          <input type="date" id="dta_atdm" onchange="consultarPorData()">
+        </div>
+        <div class="field">
+          <label for="mes_ano">Mês/Ano</label>
+          <input type="month" id="mes_ano">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field" style="display:flex; gap:8px; justify-content:flex-start;">
+          <button type="button" onclick="consultarPorMes()">Consultar mês</button>
+          <button type="button" onclick="abrirHistorico()">Histórico</button>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Dados do Cliente</legend>
+      <div class="row">
+        <div class="field" style="max-width:120px;">
+          <label for="cod_emp">Cód. empresa</label>
+          <input type="text" id="cod_emp" readonly>
+        </div>
+        <div class="field">
+          <label for="cliente_emp">Cliente / Empresa</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="cliente_emp" readonly style="flex:1;">
+            <button type="button" id="btnPesquisarEmpresa" onclick="abrirPesquisaEmpresa()">Pesquisar</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="endereco">Endereço</label>
+          <input type="text" id="endereco" readonly>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="resp">Responsável</label>
+          <input type="text" id="resp" readonly>
+        </div>
+        <div class="field">
+          <label for="contrato">Contrato</label>
+          <input type="text" id="contrato" readonly>
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" readonly>
+        </div>
+        <div class="field">
+          <label for="venc">Vencimento</label>
+          <input type="text" id="venc" readonly>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Dados do Equipamento</legend>
+      <div class="row">
+        <div class="field">
+          <label for="descr">Descrição</label>
+          <input type="text" id="descr" readonly>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="fabric">Fabricante</label>
+          <input type="text" id="fabric" readonly>
+        </div>
+        <div class="field">
+          <label for="modelo">Modelo</label>
+          <input type="text" id="modelo" readonly>
+        </div>
+        <div class="field">
+          <label for="serie">Série</label>
+          <input type="text" id="serie" readonly>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="amp_nom">Amp. nominal</label>
+          <input type="number" step="any" id="amp_nom" readonly>
+        </div>
+        <div class="field">
+          <label for="volt">Tensão (V)</label>
+          <input type="number" step="any" id="volt" readonly>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Dados da Manutenção</legend>
+
+      <div class="row">
+        <div class="field">
+          <label for="os">OS</label>
+          <input type="text" id="os">
+        </div>
+        <div class="field">
+          <label for="tec_atend">Técnico responsável</label>
+          <input type="text" id="tec_atend">
+        </div>
+      </div>
+
+      <div class="section-subtitle">Tensão (V)</div>
+      <table class="med-grid">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="col-small">INOPERANTE</th>
+            <th class="col-small">OPERANTE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RS</td>
+            <td><input type="number" step="any" id="v_rs"></td>
+            <td><input type="number" step="any" id="v_ors"></td>
+          </tr>
+          <tr>
+            <td>RT</td>
+            <td><input type="number" step="any" id="v_rt"></td>
+            <td><input type="number" step="any" id="v_ort"></td>
+          </tr>
+          <tr>
+            <td>ST</td>
+            <td><input type="number" step="any" id="v_st"></td>
+            <td><input type="number" step="any" id="v_ost"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-subtitle">Corrente (Amp)</div>
+      <table class="med-grid">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="col-small">R</th>
+            <th class="col-small">S</th>
+            <th class="col-small">T</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Comp 1</td>
+            <td><input type="number" step="any" id="c1_r"></td>
+            <td><input type="number" step="any" id="c1_s"></td>
+            <td><input type="number" step="any" id="c1_t"></td>
+          </tr>
+          <tr>
+            <td>Comp 2</td>
+            <td><input type="number" step="any" id="c2_r"></td>
+            <td><input type="number" step="any" id="c2_s"></td>
+            <td><input type="number" step="any" id="c2_t"></td>
+          </tr>
+          <tr>
+            <td>Ventilador</td>
+            <td><input type="number" step="any" id="v1_r"></td>
+            <td><input type="number" step="any" id="v1_s"></td>
+            <td><input type="number" step="any" id="v1_t"></td>
+          </tr>
+          <tr>
+            <td>Bomba</td>
+            <td><input type="number" step="any" id="b1_r"></td>
+            <td><input type="number" step="any" id="b1_s"></td>
+            <td><input type="number" step="any" id="b1_t"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-subtitle">Temperaturas (ºC)</div>
+      <table class="med-grid">
+        <thead>
+          <tr>
+            <th>Entrada Cond.</th>
+            <th>Saída Cond.</th>
+            <th>Entrada Evap.</th>
+            <th>Saída Evap.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="number" step="any" id="t_ent_cond"></td>
+            <td><input type="number" step="any" id="t_saida_cond"></td>
+            <td><input type="number" step="any" id="t_ent_ev"></td>
+            <td><input type="number" step="any" id="t_saida_ev"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="med-grid" style="margin-top:8px;">
+        <thead>
+          <tr>
+            <th>Linha Sucção</th>
+            <th>Linha Descarga</th>
+            <th>Super aquecimento</th>
+            <th>Resfriamento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="number" step="any" id="t_suc"></td>
+            <td><input type="number" step="any" id="t_desc"></td>
+            <td><input type="number" step="any" id="t_sup"></td>
+            <td><input type="number" step="any" id="t_resf"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-subtitle">Pressão (kPa)</div>
+      <table class="med-grid">
+        <thead>
+          <tr>
+            <th>Baixa</th>
+            <th>Alta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="number" step="any" id="p_bax"></td>
+            <td><input type="number" step="any" id="p_alt"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="row" style="margin-top:10px;">
+        <div class="field checkbox-line" style="max-width:200px;">
+          <input type="checkbox" id="reap_conx">
+          <label for="reap_conx">Reaperto conexões</label>
+        </div>
+
+        <div class="field checkbox-line" style="max-width:200px;">
+          <input type="checkbox" id="lav_cond">
+          <label for="lav_cond">Lavagem condensador</label>
+        </div>
+
+        <div class="field checkbox-line" style="max-width:180px;">
+          <input type="checkbox" id="limp_rot">
+          <label for="limp_rot">Limpeza rotor</label>
+        </div>
+
+        <div class="field checkbox-line" style="max-width:180px;">
+          <input type="checkbox" id="limp_filt">
+          <label for="limp_filt">Limpeza filtro</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="obs_manut">Observações</label>
+          <textarea id="obs_manut"></textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="buttons">
+      <button type="button" id="btnNovaEmpresa" onclick="novaEmpresa()">Nova empresa</button>
+      <button type="button" id="btnNovoEquip" onclick="novoEquipamento()">Novo equipamento</button>
+      <button type="button" id="btnNovasLeituras" onclick="novasLeituras()">Novas leituras</button>
+
+      <button type="button" id="btnEditarEmpresa" onclick="editarEmpresaComSenha()" disabled>Editar empresa</button>
+      <button type="button" id="btnEditarEquip" onclick="editarEquipamentoComSenha()" disabled>Editar equipamento</button>
+
+      <button type="button" id="btnSalvar" onclick="salvar()" disabled>Salvar</button>
+      <button type="button" id="btnCancelar" onclick="cancelar()">Cancelar</button>
+
+      <button type="button" onclick="excluir()">Excluir registro</button>
+      <button type="button" onclick="limparFormulario()">Limpar formulário</button>
+      <button type="button" onclick="enviarEmail()">Enviar por e-mail</button>
+      <button type="button" onclick="enviarEmailsDoMes()">Enviar e-mails do mês</button>
+    </div>
+
+    <div id="status"></div>
+    <div id="erro"></div>
+  </div>
+
+  <div id="tokenOverlay">
+    <div id="tokenModal">
+      <h2>Autenticação</h2>
+      <p id="tokenMessage">Informe o token para continuar.</p>
+      <input type="text" id="tokenInput" autocomplete="off">
+      <div id="tokenError" class="token-error"></div>
+      <div class="token-buttons">
+        <button type="button" onclick="confirmToken()">Confirmar</button>
+        <button type="button" onclick="closeTokenModal(false)">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="historicoOverlay">
+    <div id="historicoModal">
+      <h2>Histórico de Manutenções</h2>
+      <p id="historicoInfo"></p>
+      <div id="historicoLista"></div>
+      <div class="historico-buttons">
+        <button type="button" onclick="fecharHistorico()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="empresaOverlay" style="
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    display: none; align-items: center; justify-content: center; z-index: 9997;" onclick="fecharPesquisaEmpresa();">
+    <div id="empresaModal" style="
+      background:#fff; padding:16px 20px 14px; border-radius:4px;
+      max-width:520px; width:95%; box-shadow:0 0 12px rgba(0,0,0,0.3);
+      font-size:13px; max-height:75vh; overflow-y:auto;" onclick="event.stopPropagation();">
+      <h2 style="margin:0 0 8px 0; font-size:15px; text-align:center;">Selecionar empresa</h2>
+      <p style="margin:0 0 8px 0; font-size:12px; color:#444; text-align:center;">
+        Pesquise pelo nome e clique para selecionar.
+      </p>
+      <input type="text" id="empresaFiltro" placeholder="Digite para filtrar..."
+        style="width:100%; box-sizing:border-box; padding:6px 8px; border:1px solid #999; border-radius:3px;">
+      <div id="empresaLista" style="margin:10px 0 10px; display:flex; flex-direction:column; gap:6px;"></div>
+      <div style="text-align:right;">
+        <button type="button" onclick="fecharPesquisaEmpresa()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const ID_EQ_INICIAL = '<?= idEq ?>';
+  const DADOS_INICIAIS = <?!= JSON.stringify(jsonInicial) ?>;
+
+  const TOKEN_GERAL = 'TOKEN_GERAL_123';
+  const TOKEN_EXCLUIR = 'TOKEN_EXCLUIR_456';
+
+  let tokenSessaoGeral = null;
+  let tokenSessaoExcluir = null;
+  let modoAtual = 'normal';
+
+  function el(id){ return document.getElementById(id); }
+  function val(id){ const e = el(id); return e ? (e.value || '').trim() : ''; }
+  function setVal(id, v){ const e = el(id); if (e) e.value = (v === undefined || v === null) ? '' : v; }
+  function setReadonly(id, ro){ const e = el(id); if (e) e.readOnly = !!ro; }
+
+  function getBtnSalvar_() {
+    return document.getElementById('btnSalvar')
+      || document.querySelector("button[onclick*='salvar']")
+      || document.querySelector("input[type='button'][value='Salvar']")
+      || null;
+  }
+
+  function forceEnableSalvar_() {
+    const b = getBtnSalvar_();
+    if (!b) return false;
+    b.disabled = false;
+    b.hidden = false;
+    try { b.style.display = ''; b.style.visibility = 'visible'; b.style.opacity = '1'; } catch (e) {}
+    try { b.classList.remove('hidden', 'd-none'); } catch (e) {}
+    setTimeout(() => { try { const bb = getBtnSalvar_(); if (bb) bb.disabled = false; } catch (e) {} }, 50);
+    setTimeout(() => { try { const bb = getBtnSalvar_(); if (bb) bb.disabled = false; } catch (e) {} }, 300);
+    return true;
+  }
+
+  let EMPRESAS_CACHE = [];
+
+  function setStatus(msg) {
+    document.getElementById('status').textContent = msg || '';
+  }
+  function setErro(msg) {
+    document.getElementById('erro').textContent = msg || '';
+  }
+
+  function abrirPesquisaEmpresa() {
+    if (modoAtual === 'novaEmpresa') {
+      setErro('No modo "Nova empresa", preencha os dados para cadastrar a empresa.');
+      return;
+    }
+
+    setErro('');
+    setStatus('Carregando empresas...');
+
+    google.script.run
+      .withSuccessHandler(function(resp) {
+        setStatus('');
+        EMPRESAS_CACHE = (resp && resp.empresas) ? resp.empresas : [];
+        montarListaEmpresas(EMPRESAS_CACHE);
+        document.getElementById('empresaFiltro').value = '';
+        document.getElementById('empresaOverlay').style.display = 'flex';
+        setTimeout(function() { document.getElementById('empresaFiltro').focus(); }, 50);
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .listarEmpresas();
+  }
+
+  function fecharPesquisaEmpresa() {
+    document.getElementById('empresaOverlay').style.display = 'none';
+  }
+
+  function montarListaEmpresas(lista) {
+    const div = document.getElementById('empresaLista');
+    div.innerHTML = '';
+
+    if (!lista || lista.length === 0) {
+      div.innerHTML = '<div style="font-size:12px; color:#666;">Nenhuma empresa cadastrada.</div>';
+      return;
+    }
+
+    lista.forEach(function(emp) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hist-btn';
+      btn.innerHTML = `<b>${emp.CLIENTE_EMP || '(Sem nome)'}</b> <span style="color:#666;">(COD: ${emp.COD_EMP})</span><br>
+                       <span style="font-size:12px; color:#444;">${emp.ENDERECO || ''}</span>`;
+      btn.onclick = function(ev) {
+        if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+        aplicarEmpresaSelecionada(emp);
+        setTimeout(fecharPesquisaEmpresa, 0);
+      };
+      div.appendChild(btn);
+    });
+  }
+
+  function aplicarEmpresaSelecionada(emp) {
+    document.getElementById('cod_emp').value = emp.COD_EMP || '';
+    document.getElementById('cliente_emp').value = emp.CLIENTE_EMP || '';
+    document.getElementById('endereco').value = emp.ENDERECO || '';
+    document.getElementById('resp').value = emp.RESP || '';
+    document.getElementById('contrato').value = emp.CONTRATO || '';
+    document.getElementById('email').value = emp.EMAIL || '';
+    document.getElementById('venc').value = emp.VENC || '';
+
+    modoAtual = 'normal';
+    setStatus('Empresa selecionada: ' + (emp.CLIENTE_EMP || ''));
+    setErro('');
+    atualizarEstadoBotoes();
+    forceEnableSalvar_();
+  }
+
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.id === 'empresaFiltro') {
+      const q = (e.target.value || '').toLowerCase().trim();
+      const filtrada = EMPRESAS_CACHE.filter(function(emp) {
+        return (emp.CLIENTE_EMP || '').toLowerCase().includes(q) ||
+               (emp.COD_EMP || '').toLowerCase().includes(q);
+      });
+      montarListaEmpresas(filtrada);
+    } else if (e.target && (e.target.id === 'id_eq' || e.target.id === 'cod_emp')) {
+      atualizarEstadoBotoes();
+    }
+  });
+
+  let tokenMode = null;
+  let tokenResolveFn = null;
+
+  function openTokenModal(mode, resolveFn) {
+    tokenMode = mode;
+    tokenResolveFn = resolveFn;
+
+    const msgEl = document.getElementById('tokenMessage');
+    const errEl = document.getElementById('tokenError');
+    errEl.textContent = '';
+
+    msgEl.textContent = mode === 'excluir'
+      ? 'Informe o token de exclusão para continuar.'
+      : 'Informe o token de acesso para continuar.';
+
+    const overlay = document.getElementById('tokenOverlay');
+    const input = document.getElementById('tokenInput');
+    input.value = '';
+    overlay.style.display = 'flex';
+
+    setTimeout(() => {
+      input.focus();
+      input.select();
+    }, 50);
+  }
+
+  function closeTokenModal(success) {
+    document.getElementById('tokenOverlay').style.display = 'none';
+    if (typeof tokenResolveFn === 'function') tokenResolveFn(success);
+    tokenResolveFn = null;
+    tokenMode = null;
+  }
+
+  function confirmToken() {
+    const value = document.getElementById('tokenInput').value;
+    const errEl = document.getElementById('tokenError');
+
+    if (tokenMode === 'excluir') {
+      if (value !== TOKEN_EXCLUIR) {
+        errEl.textContent = 'Token de exclusão inválido.';
+        const input = document.getElementById('tokenInput');
+        input.focus();
+        input.select();
+        return;
+      }
+      tokenSessaoExcluir = value;
+      closeTokenModal(true);
+    } else {
+      if (value !== TOKEN_GERAL) {
+        errEl.textContent = 'Token de acesso inválido.';
+        const input = document.getElementById('tokenInput');
+        input.focus();
+        input.select();
+        return;
+      }
+      tokenSessaoGeral = value;
+      closeTokenModal(true);
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    const overlay = document.getElementById('tokenOverlay');
+    if (overlay.style.display === 'flex') {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        confirmToken();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeTokenModal(false);
+      }
+    }
+  });
+
+  function withTokenGeral(actionFn) {
+    if (!TOKEN_GERAL || tokenSessaoGeral !== null) {
+      actionFn();
+      return;
+    }
+    openTokenModal('geral', function(ok) {
+      if (ok) actionFn();
+    });
+  }
+
+  function withTokenExcluir(actionFn) {
+    if (!TOKEN_EXCLUIR || tokenSessaoExcluir !== null) {
+      actionFn();
+      return;
+    }
+    openTokenModal('excluir', function(ok) {
+      if (ok) actionFn();
+    });
+  }
+
+  function abrirHistorico() {
+    setErro('');
+    const idEq = document.getElementById('id_eq').value.trim();
+    if (!idEq) {
+      setErro('ID do equipamento não preenchido.');
+      return;
+    }
+
+    setStatus('Carregando histórico...');
+    google.script.run
+      .withSuccessHandler(function(resp) {
+        setStatus('');
+        const lista = (resp && resp.datas) ? resp.datas : [];
+        mostrarHistorico(lista);
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .listarHistoricoDatas(idEq);
+  }
+
+  function mostrarHistorico(datas) {
+    const overlay = document.getElementById('historicoOverlay');
+    const listaDiv = document.getElementById('historicoLista');
+    const info = document.getElementById('historicoInfo');
+
+    listaDiv.innerHTML = '';
+
+    if (!datas || datas.length === 0) {
+      info.textContent = 'Nenhuma manutenção encontrada para este equipamento.';
+    } else {
+      info.textContent = 'Clique em uma data para selecionar:';
+      datas.forEach(function(item) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'hist-btn';
+        btn.textContent = item.display;
+        btn.onclick = function() {
+          document.getElementById('dta_atdm').value = item.iso;
+          fecharHistorico();
+          consultarPorData();
+        };
+        listaDiv.appendChild(btn);
+      });
+    }
+
+    overlay.style.display = 'flex';
+  }
+
+  function fecharHistorico() {
+    document.getElementById('historicoOverlay').style.display = 'none';
+  }
+
+  function preencherManutencao(m) {
+    if (!m) {
+      limparCamposManutencao();
+      return;
+    }
+
+    setVal('dta_atdm', m.DTA_ATDM || '');
+    setVal('os', m.OS || '');
+    setVal('tec_atend', m.TEC_ATEND || '');
+    el('reap_conx').checked = (m.REAP_CONX === 'Verificado');
+
+    setVal('v_rs', m.V_RS || '');
+    setVal('v_ors', m.V_ORS || '');
+    setVal('v_rt', m.V_RT || '');
+    setVal('v_ort', m.V_ORT || '');
+    setVal('v_st', m.V_ST || '');
+    setVal('v_ost', m.V_OST || '');
+
+    setVal('c1_r', m.C1_R || '');
+    setVal('c1_s', m.C1_S || '');
+    setVal('c1_t', m.C1_T || '');
+    setVal('c2_r', m.C2_R || '');
+    setVal('c2_s', m.C2_S || '');
+    setVal('c2_t', m.C2_T || '');
+    setVal('v1_r', m.V1_R || '');
+    setVal('v1_s', m.V1_S || '');
+    setVal('v1_t', m.V1_T || '');
+    setVal('b1_r', m.B1_R || '');
+    setVal('b1_s', m.B1_S || '');
+    setVal('b1_t', m.B1_T || '');
+
+    setVal('t_ent_cond', m.T_ENT_COND || '');
+    setVal('t_saida_cond', m.T_SAIDA_COND || '');
+    setVal('t_ent_ev', m.T_ENT_EV || '');
+    setVal('t_saida_ev', m.T_SAIDA_EV || '');
+    setVal('t_suc', m.T_SUC || '');
+    setVal('t_desc', m.T_DESC || '');
+    setVal('t_sup', m.T_SUP || '');
+    setVal('t_resf', m.T_RESF || '');
+
+    setVal('p_bax', m.P_BAX || '');
+    setVal('p_alt', m.P_ALT || '');
+
+    el('lav_cond').checked = (m.LAV_COND === 'Verificado');
+    el('limp_rot').checked = (m.LIMP_ROT === 'Verificado');
+    el('limp_filt').checked = (m.LIMP_FILT === 'Verificado');
+    setVal('obs_manut', m.OBS || '');
+  }
+
+  function preencherInicial(resp) {
+    setErro('');
+    if (!resp) {
+      setErro('Erro ao carregar dados.');
+      return;
+    }
+
+    setVal('id_eq', resp.idEq || '');
+
+    if (resp.cliente) {
+      const c = resp.cliente;
+      setVal('cod_emp', c.COD_EMP || '');
+      setVal('cliente_emp', c.CLIENTE_EMP || '');
+      setVal('endereco', c.ENDERECO || '');
+      setVal('resp', c.RESP || '');
+      setVal('contrato', c.CONTRATO || '');
+      setVal('email', c.EMAIL || '');
+      setVal('venc', c.VENC || '');
+    } else {
+      setVal('cod_emp', '');
+      setVal('cliente_emp', '');
+      setVal('endereco', '');
+      setVal('resp', '');
+      setVal('contrato', '');
+      setVal('email', '');
+      setVal('venc', '');
+    }
+
+    if (resp.dados) {
+      const d = resp.dados;
+      setVal('descr', d.DESCRICAO || '');
+      setVal('fabric', d.FABRIC || '');
+      setVal('modelo', d.MODELO || '');
+      setVal('serie', d.SERIE || '');
+      setVal('amp_nom', d.AMP_NOM || '');
+      setVal('volt', d.VOLT || '');
+    } else {
+      setVal('descr', '');
+      setVal('fabric', '');
+      setVal('modelo', '');
+      setVal('serie', '');
+      setVal('amp_nom', '');
+      setVal('volt', '');
+    }
+
+    preencherManutencao(resp.manutencao || null);
+    modoAtual = 'normal';
+    atualizarEstadoBotoes();
+  }
+
+  function montarObjManutencao() {
+    return {
+      ID_EQ: val('id_eq'),
+      DTA_ATDM: val('dta_atdm'),
+      OS: val('os'),
+      TEC_ATEND: val('tec_atend'),
+      REAP_CONX: el('reap_conx').checked ? 'Verificado' : 'Não verificado',
+
+      V_RS: val('v_rs'),
+      V_ORS: val('v_ors'),
+      V_RT: val('v_rt'),
+      V_ORT: val('v_ort'),
+      V_ST: val('v_st'),
+      V_OST: val('v_ost'),
+
+      C1_R: val('c1_r'),
+      C1_S: val('c1_s'),
+      C1_T: val('c1_t'),
+      C2_R: val('c2_r'),
+      C2_S: val('c2_s'),
+      C2_T: val('c2_t'),
+      V1_R: val('v1_r'),
+      V1_S: val('v1_s'),
+      V1_T: val('v1_t'),
+      B1_R: val('b1_r'),
+      B1_S: val('b1_s'),
+      B1_T: val('b1_t'),
+
+      T_ENT_COND: val('t_ent_cond'),
+      T_SAIDA_COND: val('t_saida_cond'),
+      T_ENT_EV: val('t_ent_ev'),
+      T_SAIDA_EV: val('t_saida_ev'),
+      T_SUC: val('t_suc'),
+      T_DESC: val('t_desc'),
+      T_SUP: val('t_sup'),
+      T_RESF: val('t_resf'),
+
+      P_BAX: val('p_bax'),
+      P_ALT: val('p_alt'),
+
+      LAV_COND: el('lav_cond').checked ? 'Verificado' : 'Não verificado',
+      LIMP_ROT: el('limp_rot').checked ? 'Verificado' : 'Não verificado',
+      LIMP_FILT: el('limp_filt').checked ? 'Verificado' : 'Não verificado',
+      OBS: val('obs_manut')
+    };
+  }
+
+  function montarObjNovaEmpresa() {
+    return {
+      CLIENTE_EMP: val('cliente_emp'),
+      ENDERECO: val('endereco'),
+      RESP: val('resp'),
+      CONTRATO: val('contrato'),
+      EMAIL: val('email'),
+      VENC: val('venc')
+    };
+  }
+
+  function montarObjEmpresa() {
+    return {
+      COD_EMP: val('cod_emp'),
+      CLIENTE_EMP: val('cliente_emp'),
+      ENDERECO: val('endereco'),
+      RESP: val('resp'),
+      CONTRATO: val('contrato'),
+      EMAIL: val('email'),
+      VENC: val('venc')
+    };
+  }
+
+  function montarObjEquipamento() {
+    return {
+      ID_EQ: val('id_eq'),
+      COD_EMP: val('cod_emp'),
+      DESCRICAO: val('descr'),
+      FABRIC: val('fabric'),
+      MODELO: val('modelo'),
+      SERIE: val('serie'),
+      AMP_NOM: val('amp_nom'),
+      VOLT: val('volt'),
+      OBS: val('obs_eq')
+    };
+  }
+
+  function montarObjNovoEquipamento() {
+    return {
+      ID_EQ: val('id_eq'),
+      COD_EMP: val('cod_emp'),
+      DESCRICAO: val('descr'),
+      FABRIC: val('fabric'),
+      MODELO: val('modelo'),
+      SERIE: val('serie'),
+      AMP_NOM: val('amp_nom'),
+      VOLT: val('volt'),
+      OBS: ''
+    };
+  }
+
+  function consultarPorMes() {
+    setErro('');
+    const mesAno = document.getElementById('mes_ano').value;
+    const idEq = document.getElementById('id_eq').value.trim();
+
+    if (!mesAno) {
+      setErro('Selecione um mês/ano para consultar.');
+      return;
+    }
+    if (!idEq) {
+      setErro('ID do equipamento não preenchido.');
+      return;
+    }
+
+    setStatus('Consultando mês...');
+    google.script.run
+      .withSuccessHandler(function(resp) {
+        setStatus('');
+        preencherManutencao(resp.manutencao || null);
+        if (!resp.manutencao) setErro('Nenhum registro encontrado para este mês.');
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .consultarPorMes(idEq, mesAno);
+  }
+
+  function consultarPorData() {
+    setErro('');
+    const data = document.getElementById('dta_atdm').value;
+    const idEq = document.getElementById('id_eq').value.trim();
+    if (!data || !idEq) return;
+
+    setStatus('Consultando data...');
+    google.script.run
+      .withSuccessHandler(function(resp) {
+        setStatus('');
+        if (resp && resp.manutencao) {
+          preencherManutencao(resp.manutencao);
+        } else {
+          preencherManutencao(null);
+          setErro('Nenhum registro encontrado para esta data.');
+        }
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .consultarPorData(idEq, data);
+  }
+
+  function salvar() {
+    setErro('');
+    withTokenGeral(function() {
+      if (modoAtual === 'novaEmpresa') return salvarEmpresaFront();
+      if (modoAtual === 'novoEquipamento') return salvarEquipamentoFront();
+      if (modoAtual === 'editarEmpresa') return atualizarEmpresaFront();
+      if (modoAtual === 'editarEquipamento') return atualizarEquipamentoFront();
+      salvarManutencaoFront();
+    });
+  }
+
+  function salvarManutencaoFront() {
+    const idEq = val('id_eq');
+    const dtaAtdm = val('dta_atdm');
+    const clienteEmp = val('cliente_emp');
+    const endereco = val('endereco');
+    const resp = val('resp');
+    const contrato = val('contrato');
+    const email = val('email');
+    const venc = val('venc');
+    const descr = val('descr');
+
+    if (!idEq) {
+      setErro('ID do equipamento não preenchido.');
+      el('id_eq').focus();
+      return;
+    }
+    if (!dtaAtdm) {
+      setErro('Informe a data do atendimento.');
+      el('dta_atdm').focus();
+      return;
+    }
+    if (!clienteEmp || !endereco || !resp || !contrato || !email || !venc) {
+      setErro('Preencha todos os dados do cliente antes de gravar.');
+      return;
+    }
+    if (!descr) {
+      setErro('Preencha a descrição do equipamento antes de gravar.');
+      el('descr').focus();
+      return;
+    }
+
+    setStatus('Salvando manutenção...');
+    google.script.run
+      .withSuccessHandler(function(msg) {
+        setStatus(msg || 'Registro salvo/atualizado com sucesso.');
+        modoAtual = 'normal';
+        atualizarEstadoBotoes();
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .salvarOuAtualizarManutencao(montarObjManutencao());
+  }
+
+  function salvarEmpresaFront() {
+    const obj = montarObjNovaEmpresa();
+
+    if (!obj.CLIENTE_EMP) {
+      setErro('Informe o nome da empresa/cliente.');
+      el('cliente_emp').focus();
+      return;
+    }
+    if (!obj.ENDERECO) {
+      setErro('Informe o endereço da empresa.');
+      el('endereco').focus();
+      return;
+    }
+    if (!obj.RESP) {
+      setErro('Informe o responsável.');
+      el('resp').focus();
+      return;
+    }
+    if (!obj.CONTRATO) {
+      setErro('Informe o contrato.');
+      el('contrato').focus();
+      return;
+    }
+    if (!obj.EMAIL) {
+      setErro('Informe o e-mail.');
+      el('email').focus();
+      return;
+    }
+    if (!obj.VENC) {
+      setErro('Informe o vencimento.');
+      el('venc').focus();
+      return;
+    }
+
+    setStatus('Salvando empresa...');
+    google.script.run
+      .withSuccessHandler(function(resp) {
+        setStatus(resp && resp.mensagem ? resp.mensagem : 'Empresa cadastrada com sucesso.');
+        if (resp && resp.COD_EMP) setVal('cod_emp', resp.COD_EMP);
+        modoAtual = 'normal';
+        atualizarEstadoBotoes();
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .salvarNovaEmpresa(obj);
+  }
+
+  function salvarEquipamentoFront() {
+    const obj = montarObjNovoEquipamento();
+
+    if (!obj.COD_EMP) {
+      setErro('Nenhuma empresa carregada. Não é possível cadastrar equipamento.');
+      return;
+    }
+    if (!obj.ID_EQ) {
+      setErro('Informe o ID do equipamento.');
+      el('id_eq').focus();
+      return;
+    }
+    if (!obj.DESCRICAO) {
+      setErro('Informe a descrição do equipamento.');
+      el('descr').focus();
+      return;
+    }
+
+    setStatus('Salvando equipamento...');
+    google.script.run
+      .withSuccessHandler(function(msg) {
+        setStatus(msg || 'Equipamento cadastrado com sucesso.');
+        modoAtual = 'normal';
+        atualizarEstadoBotoes();
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .salvarNovoEquipamento(obj);
+  }
+
+  function excluir() {
+    setErro('');
+    withTokenExcluir(function() {
+      if (!confirm('Deseja realmente excluir este registro de manutenção?')) return;
+
+      const idEq = val('id_eq');
+      const data = val('dta_atdm');
+      if (!idEq || !data) {
+        setErro('Informe o ID do equipamento e a data do atendimento para excluir.');
+        return;
+      }
+
+      setStatus('Excluindo...');
+      google.script.run
+        .withSuccessHandler(function(msg) {
+          setStatus(msg || 'Registro excluído com sucesso.');
+          preencherManutencao(null);
+        })
+        .withFailureHandler(function(err) {
+          setStatus('');
+          setErro(err.message);
+        })
+        .excluirManutencao(idEq, data);
+    });
+  }
+
+  function enviarEmail() {
+    setErro('');
+    withTokenGeral(function() {
+      const idEq = val('id_eq');
+      const data = val('dta_atdm');
+      if (!idEq || !data) {
+        setErro('Informe o ID do equipamento e a data do atendimento para enviar o e-mail.');
+        return;
+      }
+
+      setStatus('Enviando e-mail...');
+      google.script.run
+        .withSuccessHandler(function(msg) {
+          setStatus(msg || 'E-mail enviado com sucesso.');
+        })
+        .withFailureHandler(function(err) {
+          setStatus('');
+          setErro(err.message);
+        })
+        .enviarEmailResumo(idEq, data);
+    });
+  }
+
+  function hojeISO() {
+    const hoje = new Date();
+    const y = hoje.getFullYear();
+    const m = ('0' + (hoje.getMonth() + 1)).slice(-2);
+    const d = ('0' + hoje.getDate()).slice(-2);
+    return y + '-' + m + '-' + d;
+  }
+
+  function novaEmpresa() {
+    setErro('');
+    withTokenGeral(function() {
+      setStatus('Modo: Nova empresa');
+      modoAtual = 'novaEmpresa';
+
+      setVal('cod_emp', '');
+      setVal('cliente_emp', '');
+      setVal('endereco', '');
+      setVal('resp', '');
+      setVal('contrato', '');
+      setVal('email', '');
+      setVal('venc', '');
+
+      setVal('id_eq', '');
+      setVal('descr', '');
+      setVal('fabric', '');
+      setVal('modelo', '');
+      setVal('serie', '');
+      setVal('amp_nom', '');
+      setVal('volt', '');
+
+      limparCamposManutencao();
+
+      setReadonly('cliente_emp', false);
+      setReadonly('endereco', false);
+      setReadonly('resp', false);
+      setReadonly('contrato', false);
+      setReadonly('email', false);
+      setReadonly('venc', false);
+
+      setReadonly('id_eq', true);
+      setReadonly('descr', true);
+      setReadonly('fabric', true);
+      setReadonly('modelo', true);
+      setReadonly('serie', true);
+      setReadonly('amp_nom', true);
+      setReadonly('volt', true);
+
+      atualizarEstadoBotoes();
+      el('cliente_emp').focus();
+
+      google.script.run
+        .withSuccessHandler(function(cod) {
+          setVal('cod_emp', cod);
+        })
+        .withFailureHandler(function(err) {
+          setErro(err.message);
+        })
+        .gerarProximoCodigoEmpresa();
+    });
+  }
+
+  function novoEquipamento() {
+    setErro('');
+    withTokenGeral(function() {
+      const codEmp = val('cod_emp');
+      if (!codEmp) {
+        setErro('Selecione uma empresa (botão Pesquisar) antes de cadastrar novo equipamento.');
+        abrirPesquisaEmpresa();
+        return;
+      }
+
+      setStatus('Modo: Novo equipamento');
+      modoAtual = 'novoEquipamento';
+
+      setReadonly('cliente_emp', true);
+      setReadonly('endereco', true);
+      setReadonly('resp', true);
+      setReadonly('contrato', true);
+      setReadonly('email', true);
+      setReadonly('venc', true);
+
+      setReadonly('id_eq', false);
+      setReadonly('descr', false);
+      setReadonly('fabric', false);
+      setReadonly('modelo', false);
+      setReadonly('serie', false);
+      setReadonly('amp_nom', false);
+      setReadonly('volt', false);
+
+      setVal('id_eq', '');
+      setVal('descr', '');
+      setVal('fabric', '');
+      setVal('modelo', '');
+      setVal('serie', '');
+      setVal('amp_nom', '');
+      setVal('volt', '');
+
+      limparCamposManutencao();
+
+      atualizarEstadoBotoes();
+      el('id_eq').focus();
+    });
+  }
+
+  function editarEmpresaComSenha() {
+    withTokenGeral(function() {
+      editarEmpresa();
+      forceEnableSalvar_();
+    });
+  }
+
+  function editarEquipamentoComSenha() {
+    withTokenGeral(function() {
+      editarEquipamento();
+      forceEnableSalvar_();
+    });
+  }
+
+  function editarEmpresa() {
+    setErro('');
+    const codEmp = val('cod_emp');
+    if (!codEmp) {
+      setErro('Selecione uma empresa antes de editar.');
+      abrirPesquisaEmpresa();
+      return;
+    }
+    modoAtual = 'editarEmpresa';
+
+    const _btnEdEmp = document.getElementById('btnEditarEmpresa');
+    if (_btnEdEmp) _btnEdEmp.disabled = true;
+
+    setReadonly('cod_emp', true);
+    setReadonly('cliente_emp', false);
+    setReadonly('endereco', false);
+    setReadonly('resp', false);
+    setReadonly('contrato', false);
+    setReadonly('email', false);
+    setReadonly('venc', false);
+
+    setReadonly('id_eq', true);
+    setReadonly('descr', true);
+    setReadonly('fabric', true);
+    setReadonly('modelo', true);
+    setReadonly('serie', true);
+    setReadonly('amp_nom', true);
+    setReadonly('volt', true);
+    setReadonly('obs_eq', true);
+
+    setStatus('Editando empresa (COD: ' + codEmp + '). Altere os campos e clique em Salvar.');
+    atualizarEstadoBotoes();
+  }
+
+  function editarEquipamento() {
+    setErro('');
+    const idEq = val('id_eq');
+    if (!idEq) {
+      setErro('Informe/consulte um equipamento antes de editar.');
+      el('id_eq').focus();
+      return;
+    }
+    modoAtual = 'editarEquipamento';
+
+    const _btnEdEq = document.getElementById('btnEditarEquip');
+    if (_btnEdEq) _btnEdEq.disabled = true;
+
+    setReadonly('id_eq', true);
+    setReadonly('cod_emp', true);
+
+    setReadonly('descr', false);
+    setReadonly('fabric', false);
+    setReadonly('modelo', false);
+    setReadonly('serie', false);
+    setReadonly('amp_nom', false);
+    setReadonly('volt', false);
+    setReadonly('obs_eq', false);
+
+    setReadonly('cliente_emp', true);
+    setReadonly('endereco', true);
+    setReadonly('resp', true);
+    setReadonly('contrato', true);
+    setReadonly('email', true);
+    setReadonly('venc', true);
+
+    setStatus('Editando equipamento (ID: ' + idEq + '). Altere os campos e clique em Salvar.');
+    atualizarEstadoBotoes();
+  }
+
+  function atualizarEmpresaFront() {
+    const obj = montarObjEmpresa();
+    if (!obj.COD_EMP) {
+      setErro('COD_EMP não informado.');
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(function(msg) {
+        setStatus(msg);
+        modoAtual = 'normal';
+        travarCamposPosEdicao();
+        atualizarEstadoBotoes();
+      })
+      .withFailureHandler(function(err) {
+        setErro(err.message);
+      })
+      .atualizarEmpresa(obj);
+  }
+
+  function atualizarEquipamentoFront() {
+    const obj = montarObjEquipamento();
+    if (!obj.ID_EQ) {
+      setErro('ID do equipamento não informado.');
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(function(msg) {
+        setStatus(msg);
+        modoAtual = 'normal';
+        travarCamposPosEdicao();
+        atualizarEstadoBotoes();
+      })
+      .withFailureHandler(function(err) {
+        setErro(err.message);
+      })
+      .atualizarEquipamento(obj);
+  }
+
+  function travarCamposPosEdicao() {
+    setReadonly('cod_emp', true);
+    setReadonly('cliente_emp', true);
+    setReadonly('endereco', true);
+    setReadonly('resp', true);
+    setReadonly('contrato', true);
+    setReadonly('email', true);
+    setReadonly('venc', true);
+
+    setReadonly('id_eq', false);
+    setReadonly('descr', true);
+    setReadonly('fabric', true);
+    setReadonly('modelo', true);
+    setReadonly('serie', true);
+    setReadonly('amp_nom', true);
+    setReadonly('volt', true);
+    setReadonly('obs_eq', true);
+  }
+
+  function novasLeituras() {
+    setErro('');
+    const idEq = val('id_eq');
+    if (!idEq) {
+      setErro('Carregue um equipamento antes de lançar novas leituras.');
+      return;
+    }
+
+    setStatus('Modo: Novas leituras');
+    modoAtual = 'novasLeituras';
+
+    setReadonly('cliente_emp', true);
+    setReadonly('endereco', true);
+    setReadonly('resp', true);
+    setReadonly('contrato', true);
+    setReadonly('email', true);
+    setReadonly('venc', true);
+
+    setReadonly('id_eq', true);
+    setReadonly('descr', true);
+    setReadonly('fabric', true);
+    setReadonly('modelo', true);
+    setReadonly('serie', true);
+    setReadonly('amp_nom', true);
+    setReadonly('volt', true);
+
+    limparCamposManutencao();
+    setVal('dta_atdm', hojeISO());
+
+    atualizarEstadoBotoes();
+    el('dta_atdm').focus();
+  }
+
+  function cancelar() {
+    setErro('');
+    setStatus('Operação cancelada.');
+    modoAtual = 'normal';
+
+    if (DADOS_INICIAIS) {
+      preencherInicial(DADOS_INICIAIS);
+      travarCamposPosEdicao();
+      atualizarEstadoBotoes();
+    } else {
+      limparCamposManutencao();
+      travarCamposPosEdicao();
+      atualizarEstadoBotoes();
+    }
+  }
+
+  function limparFormulario() {
+    setErro('');
+    withTokenGeral(function() {
+      limparCamposManutencao();
+      setStatus('Formulário de manutenção limpo.');
+    });
+  }
+
+  function limparCamposManutencao() {
+    setVal('dta_atdm', '');
+    setVal('os', '');
+    setVal('tec_atend', '');
+    el('reap_conx').checked = false;
+
+    setVal('v_rs', '');
+    setVal('v_ors', '');
+    setVal('v_rt', '');
+    setVal('v_ort', '');
+    setVal('v_st', '');
+    setVal('v_ost', '');
+
+    setVal('c1_r', '');
+    setVal('c1_s', '');
+    setVal('c1_t', '');
+    setVal('c2_r', '');
+    setVal('c2_s', '');
+    setVal('c2_t', '');
+    setVal('v1_r', '');
+    setVal('v1_s', '');
+    setVal('v1_t', '');
+    setVal('b1_r', '');
+    setVal('b1_s', '');
+    setVal('b1_t', '');
+
+    setVal('t_ent_cond', '');
+    setVal('t_saida_cond', '');
+    setVal('t_ent_ev', '');
+    setVal('t_saida_ev', '');
+    setVal('t_suc', '');
+    setVal('t_desc', '');
+    setVal('t_sup', '');
+    setVal('t_resf', '');
+
+    setVal('p_bax', '');
+    setVal('p_alt', '');
+
+    el('lav_cond').checked = false;
+    el('limp_rot').checked = false;
+    el('limp_filt').checked = false;
+    setVal('obs_manut', '');
+  }
+
+  function enviarEmailsDoMes() {
+    setErro('');
+    withTokenGeral(function() {
+      const mesAno = val('mes_ano');
+      const idEq = val('id_eq');
+
+      if (!mesAno) {
+        setErro('Informe um mês/ano para enviar os e-mails.');
+        return;
+      }
+      if (!idEq) {
+        setErro('ID do equipamento não preenchido.');
+        return;
+      }
+
+      setStatus('Gerando relatório em PDF e enviando e-mail...');
+      google.script.run
+        .withSuccessHandler(function(msg) {
+          setStatus(msg || 'Relatório em PDF enviado com sucesso.');
+        })
+        .withFailureHandler(function(err) {
+          setStatus('');
+          setErro(err.message);
+        })
+        .enviarEmailsPorMesCliente(mesAno, idEq);
+    });
+  }
+
+  function atualizarEstadoBotoes() {
+    const btnNovaEmpresa = document.getElementById('btnNovaEmpresa');
+    const btnNovoEquip = document.getElementById('btnNovoEquip');
+    const btnNovasLeituras = document.getElementById('btnNovasLeituras');
+    const btnSalvar = document.getElementById('btnSalvar');
+    const btnCancelar = document.getElementById('btnCancelar');
+    const btnPesquisarEmpresa = document.getElementById('btnPesquisarEmpresa');
+    const btnEditarEmpresa = document.getElementById('btnEditarEmpresa');
+    const btnEditarEquip = document.getElementById('btnEditarEquip');
+
+    const temEmpresa = !!val('cod_emp');
+    const temEquip = !!val('id_eq');
+
+    if (modoAtual === 'normal') {
+      btnNovaEmpresa.disabled = false;
+      btnNovoEquip.disabled = false;
+      btnNovasLeituras.disabled = false;
+
+      btnSalvar.disabled = !temEquip;
+      btnCancelar.disabled = true;
+
+      if (btnPesquisarEmpresa) btnPesquisarEmpresa.disabled = false;
+      if (btnEditarEmpresa) btnEditarEmpresa.disabled = !temEmpresa;
+      if (btnEditarEquip) btnEditarEquip.disabled = !(temEmpresa && temEquip);
+    } else {
+      btnNovaEmpresa.disabled = true;
+      btnNovoEquip.disabled = true;
+      btnNovasLeituras.disabled = true;
+
+      btnSalvar.disabled = false;
+      btnCancelar.disabled = false;
+
+      if (btnPesquisarEmpresa) btnPesquisarEmpresa.disabled = (modoAtual === 'novaEmpresa');
+      if (btnEditarEmpresa) btnEditarEmpresa.disabled = true;
+      if (btnEditarEquip) btnEditarEquip.disabled = true;
+    }
+  }
+
+  function checarIdEqDuplicado() {
+    if (modoAtual !== 'novoEquipamento') return;
+
+    setErro('');
+    const idEq = val('id_eq');
+    if (!idEq) return;
+
+    setStatus('Verificando ID do equipamento...');
+    google.script.run
+      .withSuccessHandler(function(resp) {
+        setStatus('');
+        if (resp && resp.existe) {
+          setErro('Já existe um equipamento cadastrado com esse ID. Informe outro código.');
+          const campo = document.getElementById('id_eq');
+          campo.focus();
+          campo.select();
+        } else {
+          setStatus('ID de equipamento disponível para cadastro.');
+        }
+      })
+      .withFailureHandler(function(err) {
+        setStatus('');
+        setErro(err.message);
+      })
+      .verificarIdEquipamentoDisponivel(idEq);
+  }
+
+  function init() {
+    if (DADOS_INICIAIS) {
+      preencherInicial(DADOS_INICIAIS);
+    } else {
+      atualizarEstadoBotoes();
+    }
+  }
+
+  window.onload = init;
+</script>
+</body>
+</html>

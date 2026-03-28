@@ -1,1 +1,0 @@
-# equipamentos_lcl
